@@ -1,4 +1,11 @@
 
+- mengganti waktu server localtime jakarta
+# mv /etc/localtime /etc/localtime-asal
+# cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+
+- mengubah timezone asia-jakarta
+# timedatectl set-timezone Asia/Jakarta 
+
 Ubuntu 22.04 LTS
 
 $> sudo apt update && sudo apt upgrade -y
