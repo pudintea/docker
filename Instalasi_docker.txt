@@ -44,7 +44,7 @@ version: '3.7'
 
 services:
     php-httpd:
-        image: php:8.2-apache
+        image: php:7.4-apache
         ports:
             - 80:80
         volumes:
