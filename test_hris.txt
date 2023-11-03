@@ -1,0 +1,21 @@
+File : docker-compose.yml
+
+version: '3.9'
+services:
+    php-httpd:
+        build: .
+        ports:
+         - 80:80
+        volumes:
+         - ./app:/var/www/html
+
+==========================
+
+File : Dockerfile
+
+FROM php:8.0-apache
+WORKDIR /var/www/html
+RUN docker-php-ext-install mysqli
+
+
+==========================NAJZMI_PUDINTEA========================
