@@ -49,4 +49,9 @@ RUN docker-php-ext-install gettext && \
     docker-php-ext-enable gettext
 
 
+
+========
+
+docker-compose up -d
+
 ===================== NAZMI PUDINTEA ===============================
