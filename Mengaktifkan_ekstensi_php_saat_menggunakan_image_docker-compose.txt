@@ -1,0 +1,52 @@
+=================================================================================
+Bagaimana cara mengaktifkan Apache dan ekstensi PHP berikut di docker-compose.
+
+apache2
+php7.2
+php-xdebug
+php7.2-mcrypt
+php-apcu
+php-apcu-bc
+php7.2-json
+php-imagick
+php-gettext
+php7.2-mbstring
+
+=======================================================================
+Buat satu buah file docker-compose.yml
+
+version: '3.1'
+
+services:
+  php:
+    # image: php:7.2-apache # remember to comment this line
+    build: .
+    ports:
+      - 8089:80
+    volumes:
+      - ./app:/var/www/html/
+
+
+Buat file bernama Dockerfile di samping file docker-compose.yml dengan isi sebagai berikut:
+
+FROM php:7.2-apache
+# then add the following `RUN ...` lines in each separate line, like this:
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+RUN apt-get install libmcrypt-dev
+RUN pecl install mcrypt && docker-php-ext-enable mcrypt
+
+RUN pecl install apcu && docker-php-ext-enable apcu
+
+RUN pecl install apcu_bc
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+RUN echo 'extension=apc.so' >> /usr/local/etc/php/php.ini
+
+RUN apt install -y libmagickwand-dev --no-install-recommends && \
+    pecl install imagick && docker-php-ext-enable imagick
+
+RUN docker-php-ext-install gettext && \
+    docker-php-ext-enable gettext
+
+
+===================== NAZMI PUDINTEA ===============================
