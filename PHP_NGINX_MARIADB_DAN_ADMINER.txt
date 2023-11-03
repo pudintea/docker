@@ -98,5 +98,6 @@ db = kosongkan
 
  docker-compose up -d = Untuk memulai layanan.
  docker-compose down --volume = Untuk menghentikan layanan
+ docker-compose down --remove-orphans = Menonaktifkan dan menghapus yang sebelumnya
 
 ========================= NAJZMI_PUDINTEA =================================================
