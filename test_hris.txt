@@ -74,7 +74,56 @@ WORKDIR /var/www/html
 RUN docker-php-ext-install mysqli
 
 
+MENGATASI ERROR
+A PHP Error was encountered Severity: 8192 Message: Creation of dynamic property CI_URI::$config is deprecated
 
+/system/core/URI.php
+
+#[\AllowDynamicProperties]
+
+class CI_URI {
+/system/core/Router.php
+
+#[\AllowDynamicProperties]
+
+class CI_Router {
+/system/core/Loader.php
+
+#[\AllowDynamicProperties]
+
+class CI_Loader {
+/system/core/Controller.php
+
+#[\AllowDynamicProperties]
+
+class CI_Controller {   
+/system/database/DB_driver.php
+
+#[\AllowDynamicProperties]
+
+abstract class CI_DB_driver {
+
+=====
+/system/Libraries/Session/drivers/Session_files_driver.php
+
+    #[\ReturnTypeWillChange]
+    public function open($save_path, $name)
+    {
+
+    #[\ReturnTypeWillChange]
+    public function read
+
+    #[\ReturnTypeWillChange]
+    public function write
+
+    #[\ReturnTypeWillChange]
+    public function close
+
+    #[\ReturnTypeWillChange]
+    public function destroy
+
+    #[\ReturnTypeWillChange]
+    public function gc
 
 
 
