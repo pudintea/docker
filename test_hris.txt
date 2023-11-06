@@ -1,3 +1,6 @@
+
+==================== APACHE ==============================
+
 File : docker-compose.yml
 
 version: '3.8'
@@ -16,6 +19,64 @@ File : Dockerfile
 FROM php:8.0-apache
 WORKDIR /var/www/html
 RUN docker-php-ext-install mysqli
+
+
+
+==================== NGINX BERHASIL ==============================
+isi dari : docker-compose.yml
+
+version: "3"
+services:
+  web:
+    build: .
+    container_name: php8.0-nginx
+    volumes:
+      - ./app:/var/www/html/
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html/
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+
+===========
+
+Isi File : nginx/default.conf
+
+server {
+    listen 80;
+    server_name localhost;
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass web:9000;
+        fastcgi_index index.php;
+    }
+}
+
+===============
+isi dari = Dockerfile
+
+FROM php:8.2-fpm
+WORKDIR /var/www/html
+RUN docker-php-ext-install mysqli
+
+
+
+
+
 
 
 ==========================NAJZMI_PUDINTEA========================
