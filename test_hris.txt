@@ -126,6 +126,10 @@ abstract class CI_DB_driver {
     public function gc
 
 
-
+REFRENSI
+=================
+https://stackoverflow.com/questions/74878889/php-warning-deprecated-creation-of-dynamic-property-is-deprecated
+https://catetsaja.home.blog/2019/07/05/mengatasi-error-ci-message-mkdir-invalid-path/
+https://stackoverflow.com/questions/75122899/creation-of-dynamic-property-ci-uriconfig-is-deprecated
 
 ==========================NAJZMI_PUDINTEA========================
