@@ -1,0 +1,45 @@
+
+File : docker-compose.yml
+version: '3'
+
+services:
+  php-httpd-siap:
+   build: .
+   ports:
+    - 8080:80
+   volumes:
+    - ./app:/var/www/html
+    - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+
+
+===================================
+
+File : Dockerfile
+
+FROM webimp/php-55-apache
+WORKDIR /var/www/html
+
+RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysql
+RUN docker-php-ext-install pdo
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install calendar
+RUN docker-php-ext-install dba
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install gettext
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install shmop
+RUN docker-php-ext-install soap
+RUN docker-php-ext-install sockets
+RUN docker-php-ext-install sysvmsg
+RUN docker-php-ext-install sysvsem
+RUN docker-php-ext-install sysvshm
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install soap
+RUN docker-php-ext-install mbstring
+RUN echo 'date.timezone = "Asia/Jakarta"'  >> /usr/local/etc/php/php.ini
+
+
+=====================================
