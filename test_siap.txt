@@ -41,5 +41,6 @@ RUN docker-php-ext-install soap
 RUN docker-php-ext-install mbstring
 RUN echo 'date.timezone = "Asia/Jakarta"'  >> /usr/local/etc/php/php.ini
 
-
+RUN a2enmod rewrite
+RUN service apache2 restart
 =====================================
