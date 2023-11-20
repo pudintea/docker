@@ -27,3 +27,8 @@ services:
     restart: unless-stopped
 
 Lalu : docker-comose -up -d
+
+
+===============================================
+Untuk masuk ke halaman admin
+IPADDRESS:8082/admin
