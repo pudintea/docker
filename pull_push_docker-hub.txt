@@ -1,0 +1,13 @@
+===================================================================
+
+Build dari container
+$> docker commit siap-php-httpd-siap-1 siap:v1
+
+Kita ubah Tag nya dengan memasukan username dari docker hub kita
+$> docker tag siap:v1 pudinalazhar/siap:v1
+
+push ke Online
+$> docker push pudinalazhar/siap:v1
+
+
+====================== NAJZMI PUDINTEA =============================
