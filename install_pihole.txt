@@ -1,3 +1,8 @@
+Download Images
+docker pull pudinalazhar/pihole:v5.17.2
+
+=======================================================================================
+
 FILE : docker-compose.yml
 version: "3"
 
