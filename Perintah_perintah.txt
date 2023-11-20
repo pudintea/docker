@@ -10,6 +10,12 @@ docker ps
 
 docker images
 
+docker exec -it namacontainer bash
+
+docker compose ls
+
+docker container create --name mongoserver1 -p 1000:27017 mongo
+
 
 
 
