@@ -32,3 +32,27 @@ Lalu : docker-comose -up -d
 ===============================================
 Untuk masuk ke halaman admin
 IPADDRESS:8082/admin
+Passwordnya : 123456
+
+
+==================================================
+KENDALA DAN SOLUSI YANG SAYA ALAMI SAAT INSTALASI
+
+MELIHAT PORT YANG AKTIF UBUNTU
+$> sudo lsof -i -P -n | grep LISTEN
+
+MENGATASI :
+Error response from daemon: driver failed programming external connectivity on endpoint pihole (74fed08c73e2e3fdf26d93bc9717f1b18a86f64cd7db3ebafe560baed5bb2d0a): Error starting userland proxy: listen tcp4 0.0.0.0:53: bind: address already in use
+
+$> sudo lsof -i -P -n | grep LISTEN
+$> systemctl disable systemd-resolved.service
+$> systemctl stop systemd-resolved
+
+Change again '/etc/resolv.conf' like this
+nameserver 127.0.0.1
+
+========================================================
+
+
+
+============================== NAJZMI PUDINTEA ==================================
