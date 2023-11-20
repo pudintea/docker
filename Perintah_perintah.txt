@@ -35,7 +35,10 @@ nameserver 127.0.0.1
 
 ============================
 
-
+LIHAT VERSI OS
+cat /etc/os-release
+lsb_release -a
+hostnamectl
 
 
 
