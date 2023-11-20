@@ -18,6 +18,11 @@ docker container create --name mongoserver1 -p 1000:27017 mongo
 
 
 
+MELIHAT PORT YANG AKTIF UBUNTU
+$> sudo lsof -i -P -n | grep LISTEN
+
+
+
 
 
 ============================ NAJZMI PUDINTEA ===============================
