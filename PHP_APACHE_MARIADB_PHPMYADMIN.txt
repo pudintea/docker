@@ -1,0 +1,45 @@
+$> mkdir app
+$> mkdir mydb
+$> nano docker-compose.yml
+==================================================
+
+version: '3.7'
+services:
+    php-httpd:
+        image: php:7.4-apache
+        ports:
+            - 80:80
+        volumes:
+            - ./app :/var/www/html
+
+    mariadb:
+        image: mariadb:10.6.8
+        volumes:
+            - ./mydb:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            MYSQL_ROOT_PASSWORD: "secret"
+            MYSQL_USER: "myuser"
+            MYSQL_PASSWORD: "mypass"
+            MYSQL_DATABASE: "mydb"
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mariadb:db
+        ports:
+            - 8181:80
+
+volumes:
+    mydb:  
+
+=========================================
+
+$> docker-compose up -d
+$> docker-compose up -d --build
+
+$> docker-compose down
+
+
+
+==================================== NAJZMI PUDINTEA ============================
