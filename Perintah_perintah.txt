@@ -19,6 +19,15 @@ docker container create --name mongoserver1 -p 1000:27017 mongo
 DOWN dan HAPUS
 docker-compose down --rmi all --volumes
 
+Jalankan
+docker run -itd pudinalazhar/ubuntu:14.04.1 /bin/bash
+docker run -itd --name serversidak2 pudinalazhar/ubuntu:14.04.1 /bin/bash
+docker run -itd --name serversidak2 -p 8086:80 pudinalazhar/ubuntu:14.04.1 /bin/bash
+
+docker stop namanya
+docker rm namanya
+docker rename namanya/id jadinamaapa
+
 
 MELIHAT PORT YANG AKTIF UBUNTU
 $> sudo lsof -i -P -n | grep LISTEN
