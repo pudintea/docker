@@ -17,6 +17,7 @@ docker compose ls
 docker container create --name mongoserver1 -p 1000:27017 mongo
 
 DOWN dan HAPUS
+docker-compose down --rmi all
 docker-compose down --rmi all --volumes
 
 Jalankan
