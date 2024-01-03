@@ -1,0 +1,23 @@
+$> docker pull pudinalazhar/cacti:v0.8.8
+
+DOCKER COMPOSE
+$> nano docker-compose.yml
+
+version: "3"
+services:
+    cacti-088:
+      image: pudinalazhar/cacti:v0.8.8
+      container_name: cacti-088
+      ports:
+       - 8088:80
+       - 161:161
+
+Keluar dan simpan.
+
+Mengaktifkan
+$> docker-compose up -d
+
+Menonaktifkan
+$> docker-compose down
+
+============================ pudin.my.id ======================================
