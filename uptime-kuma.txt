@@ -1,5 +1,13 @@
 
+$> mkdir uptime-kuma
+$> cd uptime-kuma
+$> mkdir data-kuma
 $> docker run -d --restart=always -p 3001:3001 -v data-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+
+Biar bisa diaksess nya dari localhost
+$> docker run -d --restart=always -p 127.0.0.1:3001:3001 -v data-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+
+
 $> docker ps
 $> docker images
 $> docker stop namanya
