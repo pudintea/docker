@@ -1,5 +1,7 @@
 Link : https://go2docs.graylog.org/5-2/downloading_and_installing_graylog/docker_installation.htm
 
+#> nano docker-compose.yml
+
 version: '2'
 services:
 # MongoDB: https://hub.docker.com/_/mongo/
