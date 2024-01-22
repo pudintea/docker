@@ -1,4 +1,6 @@
 $> docker pull pudinalazhar/cacti:v0.8.8
+$> docker run -itd --name cacti-088 -p 8088:80 -p 161:161 pudinalazhar/cacti:v0.8.8
+$> docker run -itd --name cacti-088 -p 8088:80 -p 161:161 -v /db/cacti:/var/lib/mysql/cacti -v /rrdtool/rra:/var/lib/cacti/rra pudinalazhar/cacti:v0.8.8.2
 
 DOCKER COMPOSE
 $> nano docker-compose.yml
