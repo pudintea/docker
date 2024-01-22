@@ -41,4 +41,14 @@ ZIP
 #> zip -r filename.zip folder1 folder2
 #> tar -czvf cacti.tar.gz foldercacti
 
+Ekstrak Tar.GZ
+#> tar -xzvf nama_file.tar.gz
+-x memberikan instruksi agar filenya diekstrak.
+-z algoritma ekstraknya adalah Gzip/Gunzip.
+-v informasi prosesnya akan dicetak lengkap. Jadi file – file apa saja yang sedang diekstrak akan muncul di layar.
+-f nanti akan disimpan sebagai file bukan ditampilkan isinya pada layar.
+
+
+
+
 ============================ pudin.my.id ======================================
