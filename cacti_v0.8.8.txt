@@ -34,4 +34,10 @@ $> docker-compose up -d
 Menonaktifkan
 $> docker-compose down
 
+
+ZIP
+
+#> zip -r filename.zip folder
+#> zip -r filename.zip folder1 folder2
+
 ============================ pudin.my.id ======================================
