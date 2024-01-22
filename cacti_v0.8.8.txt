@@ -39,5 +39,6 @@ ZIP
 
 #> zip -r filename.zip folder
 #> zip -r filename.zip folder1 folder2
+#> tar -czvf cacti.tar.gz foldercacti
 
 ============================ pudin.my.id ======================================
