@@ -1,0 +1,4 @@
+Ini adalah database sql dan RRD tools cacti
+
+
+========== PUDIN.MY.ID =====================
