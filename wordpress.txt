@@ -2,7 +2,7 @@
 
 
 
-
+#> nano docker-compose.yml
 
 version: '3.3'
 services:
