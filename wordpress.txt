@@ -34,14 +34,18 @@ services:
      db_data: {}
 
 
+========================================================================
+
 MUSAAMIN
+=========
+#> nano docker-compose.yml
 
 version: "3.8"
 services:
   db:
     image: mariadb:latest
     volumes:
-      - db_data:/var/lib/mysql
+      - ./db_data:/var/lib/mysql
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: secret
@@ -54,9 +58,9 @@ services:
       - db
     image: wordpress:latest
     volumes:
-      - wordpress_data:/var/www/html
+      - ./wp_data:/var/www/html
     ports:
-      - "80:80"
+      - "8080:80"
     restart: always
     environment:
       WORDPRESS_DB_HOST: db:3306
