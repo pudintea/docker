@@ -34,7 +34,7 @@ $> docker-compose up -d
 $> docker-compose up -d --build
 $> docker-compose down
 
-$> nano /etc/nginx/site-available/mnitoring.uptime.eu.org
+$> nano /etc/nginx/sites-available/www.uptime.web.id
 
 server{
   listen 80;
@@ -48,7 +48,7 @@ server{
   }
 }
 
-$> ln -s /etc/nginx/site-available/mnitoring.uptime.eu.org /etc/nginx/site-enable/
+$> ln -s ln -s /etc/nginx/sites-available/www.uptime.web.id /etc/nginx/sites-enabled/
 
 
 
