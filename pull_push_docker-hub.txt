@@ -1,4 +1,7 @@
 ===================================================================
+Login
+$> docker login 
+Masukin username dan password docker.hub
 
 Build dari container
 $> docker commit siap-php-httpd-siap-1 siap:v1
@@ -9,5 +12,7 @@ $> docker tag siap:v1 pudinalazhar/siap:v1
 push ke Online
 $> docker push pudinalazhar/siap:v1
 
+Logout docker hub
+$> docker logout
 
 ====================== NAJZMI PUDINTEA =============================
