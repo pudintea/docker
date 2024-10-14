@@ -53,6 +53,18 @@ cat /etc/os-release
 lsb_release -a
 hostnamectl
 
+===========================
+
+From our side we used:
+
+> sudo docker system prune -a -f
+
+Which saved me 3Go!
+We also used the famous commands:
+
+> sudo docker rm -v $(sudo docker ps -a -q -f status=exited)
+> sudo docker rmi -f  $(sudo docker images -f "dangling=true" -q)
+> docker volume ls -qf dangling=true | xargs -r docker volume rm
 
 
 
