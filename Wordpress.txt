@@ -1,0 +1,26 @@
+> nano docker-compose.yml
+Masukan :
+
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: <YOUR_DB_HOST>
+      WORDPRESS_DB_USER: <YOUR_DB_USER>
+      WORDPRESS_DB_PASSWORD: <YOUR_DB_PASSWORD>
+      WORDPRESS_DB_NAME: <YOUR_DB_NAME>
+    restart: always
+
+volumes:
+  wordpress:
+    driver: local
+
+
+============ END =========================
