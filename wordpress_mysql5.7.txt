@@ -101,4 +101,39 @@ Jika ingin menonaktifkan akses secara default,
 Anda bisa membuat file docker-compose.override.yml tanpa layanan phpmyadmin,
 lalu mengaktifkan dengan perintah docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d.
 
+IMPORT MYSQL VIA CLI
+====================
+Untuk mengimpor file SQL yang lebih besar ke MySQL di Docker melalui CLI,
+Anda bisa menggunakan perintah docker exec untuk menjalankan proses impor langsung ke dalam container MySQL. Berikut adalah langkah-langkahnya:
+
+Langkah-Langkah Import SQL via CLI
+Pastikan File SQL Tersedia di Host Simpan file SQL yang ingin diimpor pada mesin host,
+misalnya dengan nama backup.sql.
+
+Gunakan docker cp untuk Memasukkan File ke Container Salin file SQL ke dalam container MySQL untuk memastikan aksesnya:
+
+> docker cp /path/to/backup.sql mysql_db:/backup.sql
+
+Eksekusi Import ke MySQL Jalankan perintah berikut untuk mengimpor file SQL ke database MySQL dalam container.
+Gantilah wordpress_db, wordpress_user, dan wordpress_password sesuai dengan pengaturan yang sudah Anda buat.
+
+> docker exec -i mysql_db mysql -u wordpress_user -pwordpress_password wordpress_db < /backup.sql
+
+Keterangan
+-i memastikan perintah dijalankan dengan input dari file SQL.
+Gantilah wordpress_db, wordpress_user, dan wordpress_password dengan nama database, username, dan password Anda.
+Verifikasi Hasil Import Setelah impor selesai, Anda bisa memverifikasi apakah data berhasil diimpor dengan mengakses database dari aplikasi atau phpMyAdmin.
+
+Alternatif:
+Menjalankan docker exec Langsung tanpa docker cp
+Jika file SQL ada di mesin host dan Anda ingin langsung mengimpornya ke database, Anda bisa mengarahkan input dari file tersebut dengan cara ini:
+
+> cat /path/to/backup.sql | docker exec -i mysql_db mysql -u wordpress_user -pwordpress_password wordpress_db
+
+Perhatikan bahwa tidak ada spasi antara -p dan wordpress_password.
+Perintah ini membaca file SQL langsung dari mesin host dan mengirimkannya sebagai input ke MySQL di container.
+
+Sudah saya coba
+> cat nama_db.sql | docker exec -i mysql_db mysql -u root -proot_password wordpress_db
+
 =============== END ====================
