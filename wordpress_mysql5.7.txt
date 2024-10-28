@@ -1,3 +1,5 @@
+> mkdir mysql_data
+> mkdir wordpress
 > nano docker-compose.yml
 
 version: '3.8'
@@ -82,5 +84,21 @@ docker logs wordpress_app
 docker logs phpmyadmin_app
 
 
+MENONAKTIFKAN PHPMYADMIN
+==========================
+
+Menonaktifkan Akses phpMyAdmin
+Anda bisa menghentikan layanan phpMyAdmin dengan perintah berikut:
+> docker-compose stop phpmyadmin
+Ini akan menghentikan phpMyAdmin tanpa menghapus container, jadi Anda bisa memulai kembali saat dibutuhkan tanpa harus mengonfigurasi ulang.
+
+Mengaktifkan Kembali phpMyAdmin Saat Dibutuhkan
+Untuk memulai kembali layanan phpMyAdmin, jalankan:
+> docker-compose start phpmyadmin
+
+Alternatif: Menggunakan Docker Compose Override
+Jika ingin menonaktifkan akses secara default,
+Anda bisa membuat file docker-compose.override.yml tanpa layanan phpmyadmin,
+lalu mengaktifkan dengan perintah docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d.
 
 =============== END ====================
