@@ -84,6 +84,7 @@ docker logs wordpress_app
 docker logs phpmyadmin_app
 
 
+
 MENONAKTIFKAN PHPMYADMIN
 ==========================
 
@@ -100,6 +101,8 @@ Alternatif: Menggunakan Docker Compose Override
 Jika ingin menonaktifkan akses secara default,
 Anda bisa membuat file docker-compose.override.yml tanpa layanan phpmyadmin,
 lalu mengaktifkan dengan perintah docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d.
+
+
 
 IMPORT MYSQL VIA CLI
 ====================
