@@ -1,0 +1,98 @@
+
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Sesuaikan dengan password root yang kuat
+      MYSQL_DATABASE: wordpress_db  # Nama database untuk WordPress
+      MYSQL_USER: wordpress_user  # Pengguna database khusus untuk WordPress
+      MYSQL_PASSWORD: wordpress_password  # Kata sandi untuk pengguna WordPress
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: mysql_db  # Nama service MySQL untuk koneksi
+      WORDPRESS_DB_USER: wordpress_user
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress_db
+    depends_on:
+      mysql:
+        condition: service_healthy  # Menunggu sampai MySQL sehat
+    networks:
+      - wordpress_network
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_app
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql_db  # Host name MySQL
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - wordpress_network
+    restart: always
+
+volumes:
+  wordpress:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  wordpress_network:
+    driver: bridge
+
+
+PENJELASAN
+=================================
+Penjelasan Perubahan
+Network Bridge: Menggunakan wordpress_network untuk memastikan semua container berada dalam satu network khusus.
+Healthcheck untuk MySQL: Menambahkan healthcheck pada MySQL untuk menunggu hingga layanan MySQL siap sebelum container WordPress atau phpMyAdmin mencoba terhubung.
+Depends_on dengan Kondisi service_healthy: Menjadikan depends_on pada WordPress dan phpMyAdmin menunggu hingga MySQL melewati healthcheck.
+Langkah untuk Mengaplikasikan Konfigurasi
+Simpan perubahan pada file docker-compose.yml.
+
+Hentikan semua container sebelumnya dengan menjalankan:
+> docker-compose down
+
+Mulai ulang semua container dengan:
+> docker-compose up -d
+
+Verifikasi
+Cek status container dengan docker-compose ps untuk memastikan semuanya berjalan dan MySQL sehat ((healthy)).
+WordPress seharusnya dapat diakses di http://localhost:8080.
+phpMyAdmin seharusnya dapat diakses di http://localhost:8081.
+Jika masalah masih terjadi, kita bisa mengecek log dari masing-masing container untuk melihat pesan error lebih detail:
+
+
+> docker logs mysql_db
+> docker logs wordpress_app
+> docker logs phpmyadmin_app
+
+=========== END =============
