@@ -1,0 +1,86 @@
+> nano docker-compose.yml
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7  # Menggunakan versi MySQL yang lebih kompatibel
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # Sesuaikan dengan password root yang kuat
+      MYSQL_DATABASE: wordpress_db  # Nama database untuk WordPress
+      MYSQL_USER: wordpress_user  # Pengguna database khusus untuk WordPress
+      MYSQL_PASSWORD: wordpress_password  # Kata sandi untuk pengguna WordPress
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: mysql_db  # Nama service MySQL untuk koneksi
+      WORDPRESS_DB_USER: wordpress_user
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - wordpress_network
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_app
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql_db  # Host name MySQL
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - wordpress_network
+    restart: always
+
+volumes:
+  wordpress:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  wordpress_network:
+    driver: bridge
+
+
+====================================
+docker-compose down
+docker-compose up -d
+
+
+
+Jika ada error, Lihat Log
+=========================
+docker logs mysql_db
+docker logs wordpress_app
+docker logs phpmyadmin_app
+
+
+
+=============== END ====================
