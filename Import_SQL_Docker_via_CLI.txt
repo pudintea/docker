@@ -27,4 +27,6 @@ Jika file SQL ada di mesin host dan Anda ingin langsung mengimpornya ke database
 Perhatikan bahwa tidak ada spasi antara -p dan wordpress_password.
 Perintah ini membaca file SQL langsung dari mesin host dan mengirimkannya sebagai input ke MySQL di container.
 
+> cat nama_db.sql | docker exec -i mysql_db mysql -u root -proot_password wordpress_db
+
 ========== END ==============
