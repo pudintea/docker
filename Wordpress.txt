@@ -25,4 +25,63 @@ volumes:
 =========
 > docker-compose up -d
 > docker-compose down
+
+
+SECRIPT LENGKAP DENGAN MYSQL DAN PHPMYADMIN
+-------------------------------------------
+
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_P4ssw0rd  # Ganti dengan password root yang kuat
+      MYSQL_DATABASE: wordpress_db  # Nama database untuk WordPress
+      MYSQL_USER: wordpress_user  # Pengguna database khusus untuk WordPress
+      MYSQL_PASSWORD: wordpress_password  # Kata sandi untuk pengguna WordPress
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./wordpress:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: mysql_db  # Menggunakan nama service MySQL
+      WORDPRESS_DB_USER: wordpress_user
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress_db
+    depends_on:
+      - mysql
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_app
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql_db  # Menggunakan nama service MySQL
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_P4ssw0rd  # Sesuaikan dengan password root MySQL di atas
+    depends_on:
+      - mysql
+    restart: always
+
+volumes:
+  wordpress:
+    driver: local
+  mysql_data:
+    driver: local
+
+
+
+
 ============ END =========================
