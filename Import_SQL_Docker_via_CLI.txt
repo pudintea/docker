@@ -1,5 +1,6 @@
 
-Untuk mengimpor file SQL yang lebih besar ke MySQL di Docker melalui CLI, Anda bisa menggunakan perintah docker exec untuk menjalankan proses impor langsung ke dalam container MySQL. Berikut adalah langkah-langkahnya:
+Untuk mengimpor file SQL yang lebih besar ke MySQL di Docker melalui CLI,
+Anda bisa menggunakan perintah docker exec untuk menjalankan proses impor langsung ke dalam container MySQL. Berikut adalah langkah-langkahnya:
 
 Langkah-Langkah Import SQL via CLI
 Pastikan File SQL Tersedia di Host Simpan file SQL yang ingin diimpor pada mesin host,
@@ -9,7 +10,8 @@ Gunakan docker cp untuk Memasukkan File ke Container Salin file SQL ke dalam con
 
 > docker cp /path/to/backup.sql mysql_db:/backup.sql
 
-Eksekusi Import ke MySQL Jalankan perintah berikut untuk mengimpor file SQL ke database MySQL dalam container. Gantilah wordpress_db, wordpress_user, dan wordpress_password sesuai dengan pengaturan yang sudah Anda buat.
+Eksekusi Import ke MySQL Jalankan perintah berikut untuk mengimpor file SQL ke database MySQL dalam container.
+Gantilah wordpress_db, wordpress_user, dan wordpress_password sesuai dengan pengaturan yang sudah Anda buat.
 
 > docker exec -i mysql_db mysql -u wordpress_user -pwordpress_password wordpress_db < /backup.sql
 
