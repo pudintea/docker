@@ -9,7 +9,25 @@ Centang :
 - delete:packages
 
 
+> docker tag cacti ghcr.io/pudintea/cacti:latest
 
+Push
+> docker push ghcr.io/pudintea/cacti:latest // Buat nyoba dulu
+> echo "TOKEN" | docker login ghcr.io -u pudintea --password-stdin
+> docker push ghcr.io/pudintea/cacti:latest
+
+
+Push a image to Github Packages (GHCR)
+Create image
+Create PAT on Github
+Authenticate GHCR
+Tag and push our image to GHCR
+export CR_PAT=<TOKEN>
+echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+Use Github Actions to Publish a Docker image to Github Packages (GHCR)
+Create repo - and Checkin our Dockerfile
+Build your Github action workflow
+Trigger our workflow
 
 
 ================= PUDIN.MY.ID ================
