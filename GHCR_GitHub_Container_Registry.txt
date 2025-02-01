@@ -4,5 +4,12 @@ Akun Github
 Settings > Developer Settings > Personal Access Tokens > Generate New Tokens > Tokens (classic) personal access > Generate New Token.
 
 Note : GHCR
+Centang :
+- write:packages
+- delete:packages
 
 
+
+
+
+================= PUDIN.MY.ID ================
