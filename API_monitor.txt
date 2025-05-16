@@ -1,0 +1,24 @@
+
+Buat Folder : monitor-uptime-kuma
+
+> npm init -y
+> npm install express axios ejs tough-cookie axios-cookiejar-support
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================== MONITOR UPTIME KUMA ===============================
