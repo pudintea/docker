@@ -1,0 +1,93 @@
+
+1. Apakah Uptime Kuma Punya API?
+Secara resmi, Uptime Kuma belum merilis dokumentasi publik untuk REST API, tapi ada API internal (berbasis HTTP dan WebSocket) yang digunakan oleh dashboard-nya sendiri. Ini bisa di-reverse engineer atau digunakan langsung.
+
+2. Akses API Internal (HTTP/JSON)
+Kamu bisa gunakan cookie login atau API token (sejak versi 1.21.0 ke atas) untuk autentikasi dan ambil informasi semua monitor yang aktif, misalnya:
+
+Endpoint: Ambil Semua Monitor
+POST /api/status-page/slug
+
+Contoh:
+curl -X POST http://localhost:3001/api/status-page/default
+
+Atau:
+curl -X GET http://localhost:3001/api/status-page/slug-name
+
+Gantilah slug-name dengan nama status page yang kamu buat di Uptime Kuma. Bisa cek di pengaturan Status Page.
+
+Contoh Response [json]
+{
+  "ok": true,
+  "monitors": [
+    {
+      "id": 1,
+      "name": "Server 1",
+      "status": 1,  // 1 = UP, 0 = DOWN
+      "hostname": "https://example.com",
+      "tags": [],
+      ...
+    },
+    ...
+  ]
+}
+
+Kamu bisa hitung total monitor dan status masing-masing (status == 1 untuk up, status == 0 untuk down).
+
+
+Contoh di Node.js (Express):
+===============================
+const express = require('express');
+const axios = require('axios');
+const app = express();
+
+app.get('/kuma-status', async (req, res) => {
+  try {
+    const { data } = await axios.post('http://localhost:3001/api/status-page/default');
+    const up = data.monitors.filter(m => m.status === 1).length;
+    const down = data.monitors.filter(m => m.status === 0).length;
+    res.json({ total: data.monitors.length, up, down });
+  } catch (err) {
+    res.status(500).send('Gagal mengambil data dari Uptime Kuma');
+  }
+});
+
+app.listen(3000, () => console.log('Running on port 3000'));
+
+
+Contoh di PHP (menggunakan file_get_contents):
+=================================================
+<?php
+$response = file_get_contents('http://localhost:3001/api/status-page/default');
+$data = json_decode($response, true);
+
+$up = 0;
+$down = 0;
+
+foreach ($data['monitors'] as $monitor) {
+    if ($monitor['status'] === 1) $up++;
+    if ($monitor['status'] === 0) $down++;
+}
+
+echo "Total: " . count($data['monitors']) . "<br>";
+echo "Up: $up<br>";
+echo "Down: $down<br>";
+?>
+
+Tips Keamanan
+================
+Jika kamu pakai status page public, batasi IP atau gunakan autentikasi di lapisan depan (seperti nginx, Express, dll). Jangan ekspose port Kuma ke publik tanpa perlindungan.
+
+Rekomendasi untuk Kamu
+======================
+Gunakan status page public jika ingin akses API yang simpel.
+Gunakan Node.js jika ingin kontrol real-time (karena Kuma juga pakai WebSocket).
+Gunakan PHP jika hanya ingin tampilkan status secara statik/interval (misal 1 menit sekali).
+
+
+
+
+
+
+
+==================== PUDIN.MY.ID ======================
