@@ -24,7 +24,9 @@ networks:
   minio-net:
     driver: bridge
 
-
+Tambahkan user ke grup docker
+Jika kamu menggunakan user lain, tambahkan dulu dia ke group docker
+> sudo usermod -aG docker $USER
 
 Jalankan MinIO
 > docker compose up -d
