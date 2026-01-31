@@ -6,6 +6,43 @@
 # timedatectl set-timezone Asia/Jakarta
 
 Dokumentasi : https://docs.docker.com/engine/install/ubuntu/
+Docker Compose Release : https://github.com/docker/compose/releases/
+
+2026
+=====
+# Add Docker's official GPG key:
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+sudo groupadd docker || true
+sudo usermod -aG docker $USER
+
+sudo systemctl enable --now docker
+
+STATUS DAN START
+sudo systemctl status docker
+sudo systemctl start docker
+
+CEK
+docker version
+docker compose version
+
+==========================================
 
 Ubuntu 22.04 LTS
 
@@ -17,6 +54,7 @@ $> sudo apt update
 $> sudo apt install docker-ce docker-ce-cli containerd.io
 $> wget https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64 -O /usr/bin/docker-compose
 $> wget https://github.com/docker/compose/releases/download/v2.29.3/docker-compose-linux-x86_64 -O /usr/bin/docker-compose
+$> egwt https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-linux-x86_64 -O /usr/bin/docker-compose
 $> chmod +x /usr/bin/docker-compose
 $> sudo groupadd docker
 $> sudo usermod -aG docker $USER
@@ -84,5 +122,33 @@ $> docker ps
 
 SUMBER : https://musaamin.web.id/install-lamp-dengan-docker/
 ======================
+
+
+
+Docker antarmuka web (GUI)
+===========================
+Untuk mengelola Docker melalui antarmuka web (GUI) di Linux setelah menginstal Docker Engine,
+solusi paling populer dan mudah digunakan adalah Portainer CE.
+Portainer berjalan sebagai container Docker itu sendiri dan memberikan dashboard web yang komprehensif.
+Berikut langkah-langkah instalasi Portainer:
+1. Buat Volume Portainer
+Pertama, buat volume untuk menyimpan data konfigurasi Portainer agar tidak hilang saat container direstart: 
+> sudo docker volume create portainer_data
+
+2. Jalankan Container Portainer 
+Jalankan perintah berikut untuk mengunduh dan menjalankan Portainer di port 9443 (HTTPS) dan 8000:
+> sudo docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest
+
+3. Akses Web UI
+Buka browser Anda dan akses: https://localhost:9443
+Anda mungkin perlu menyetujui peringatan keamanan (karena menggunakan sertifikat self-signed).
+Buat username dan password admin pada layar pertama yang muncul.
+
+4. Selesai
+Setelah login, Anda bisa memilih "Get Started" untuk mengelola local Docker engine Anda langsung dari browser.
+Catatan: Pastikan firewall Anda mengizinkan lalu lintas ke port 9443 jika Anda mengaksesnya dari komputer lain.
+
+
+
 
 =================== NAJZMI_PUDINTEA =====================
