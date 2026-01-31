@@ -3,7 +3,9 @@
 # mv /etc/localtime /etc/localtime-asal && cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
 - mengubah timezone asia-jakarta
-# timedatectl set-timezone Asia/Jakarta 
+# timedatectl set-timezone Asia/Jakarta
+
+Dokumentasi : https://docs.docker.com/engine/install/ubuntu/
 
 Ubuntu 22.04 LTS
 
