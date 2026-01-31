@@ -205,6 +205,54 @@ Cek di MinIO Console → Bucket → uploads/
 SUCCESS! CI4 → MinIO via Docker
 
 
+===========================================================
+
+Contoh Docker Compose: MinIO + CI4
+> nano docker-compose.yml
+
+version: "3.9"
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - app-net
+
+  ci4:
+    image: php:8.2-apache
+    container_name: ci4
+    volumes:
+      - ./ci4:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - minio
+    networks:
+      - app-net
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_KEY: minioadmin
+      MINIO_SECRET: minioadmin123
+      MINIO_BUCKET: ci4-bucket
+      MINIO_REGION: us-east-1
+
+networks:
+  app-net:
+    driver: bridge
+
+
+
+
 
 
 // PUDIN SAEPUDIN
