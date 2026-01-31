@@ -389,19 +389,68 @@ mc ilm ls minio/pdn-bucket
 mc anonymous get minio/pdn-bucket
 
 
+Contoh Strategi Bucket (Best Practice)
+--------------------------------------
+Bucket	Versioning	Lifecycle
+user-uploads	ON	30–90 hari
+documents	ON	90 hari
+logs	OFF	delete 14 hari
+tmp	OFF	delete 1 hari
+
+Jangan semua bucket disamakan tanpa alasan.
 
 
 
+----------------------------------------
 
+(Opsional) Lifecycle untuk LOG / TEMP
+Kalau mau, ini contoh tanpa versioning:
 
+> nano lifecycle-log.json
+{
+  "Rules": [
+    {
+      "ID": "delete-old-logs",
+      "Status": "Enabled",
+      "Expiration": {
+        "Days": 14
+      }
+    }
+  ]
+}
 
+Opsi A — Pakai Script (reusable)
+Buat versi baru create-bucket-log.sh:
 
+#!/bin/bash
+set -e
 
+ALIAS="minio"
+BUCKET=$1
+LIFECYCLE_FILE="lifecycle-log.json"
+ACCESS=${2:-private}
 
+if [ -z "$BUCKET" ]; then
+  echo "Usage: ./create-bucket-log.sh bucket-name [public|private]"
+  exit 1
+fi
 
+mc mb $ALIAS/$BUCKET --ignore-existing
+mc version disable $ALIAS/$BUCKET || true   # Non-versioned
+mc ilm import $ALIAS/$BUCKET $LIFECYCLE_FILE
 
+if [ "$ACCESS" == "public" ]; then
+  mc anonymous set public $ALIAS/$BUCKET
+else
+  mc anonymous set none $ALIAS/$BUCKET
+fi
 
+echo "✅ Bucket '$BUCKET' (LOG/TEMP) siap!"
 
+Lalu jalankan:
+
+./create-bucket-log.sh temp-bucket
+./create-bucket-log.sh logs
 
 
 // PUDIN SAEPUDIN
