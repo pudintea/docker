@@ -258,6 +258,148 @@ networks:
     driver: bridge
 
 
+BACKUP
+========================================================================
+Install MinIO Client (mc)
+Kalau belum:
+> wget https://dl.min.io/client/mc/release/linux-amd64/mc
+> chmod +x mc
+> sudo mv mc /usr/local/bin/mc
+> mc --version
+
+OPSI 3 — Backup + Versioning (PALING AMAN)
+Aktifkan versioning
+> mc version enable minio/pdn-bucket
+
+Backup dengan version
+> mc mirror --overwrite --versions minio /backup/minio
+
+✔️ Aman dari:
+File terhapus
+File ketimpa
+
+
+Aku bikinkan script lengkap, siap pakai, dan production-friendly untuk:
+✅ Buat bucket
+✅ Aktifkan versioning
+✅ Pasang lifecycle policy
+✅ (Opsional) set public/private
+✅ Aman dijalankan berulang (idempotent)
+
+Aku jelaskan sekali, lalu kamu bisa pakai selamanya.
+
+1️⃣ Prasyarat (sekali saja)
+
+Pastikan:
+> mc --version
+
+
+Alias MinIO sudah ada:
+> mc alias set minio http://localhost:9000 minioadmin minioadmin123
+
+2️⃣ Lifecycle Policy (Template)
+> nano lifecycle-versioned.json
+
+Use case: upload user, dokumen, foto (AMAN & HEMAT)
+
+{
+  "Rules": [
+    {
+      "ID": "expire-old-versions",
+      "Status": "Enabled",
+      "NoncurrentVersionExpiration": {
+        "NoncurrentDays": 30
+      }
+    },
+    {
+      "ID": "cleanup-delete-marker",
+      "Status": "Enabled",
+      "Expiration": {
+        "ExpiredObjectDeleteMarker": true
+      }
+    }
+  ]
+}
+
+
+📌 Artinya:
+Versi lama disimpan 30 hari
+Delete marker dibersihkan otomatis
+Versi aktif tidak dihapus
+
+3️⃣ Script Lengkap: Bucket + Versioning + Policy
+> nano create-bucket.sh
+#!/bin/bash
+set -e
+
+# ===== CONFIG =====
+ALIAS="minio"
+LIFECYCLE_FILE="lifecycle-versioned.json"
+
+BUCKET=$1
+ACCESS=${2:-private}   # private | public
+
+# ===== VALIDATION =====
+if [ -z "$BUCKET" ]; then
+  echo "❌ Usage: ./create-bucket.sh bucket-name [public|private]"
+  exit 1
+fi
+
+if [ ! -f "$LIFECYCLE_FILE" ]; then
+  echo "❌ Lifecycle file not found: $LIFECYCLE_FILE"
+  exit 1
+fi
+
+echo "🚀 Setting up bucket: $BUCKET"
+
+# ===== CREATE BUCKET =====
+mc mb $ALIAS/$BUCKET --ignore-existing
+
+# ===== ENABLE VERSIONING =====
+mc version enable $ALIAS/$BUCKET || true
+
+# ===== APPLY LIFECYCLE =====
+mc ilm import $ALIAS/$BUCKET $LIFECYCLE_FILE
+
+# ===== ACCESS POLICY =====
+if [ "$ACCESS" == "public" ]; then
+  mc anonymous set public $ALIAS/$BUCKET
+  echo "🌍 Bucket set to PUBLIC"
+else
+  mc anonymous set none $ALIAS/$BUCKET
+  echo "🔐 Bucket set to PRIVATE"
+fi
+
+echo "✅ Bucket '$BUCKET' ready!"
+
+
+4️⃣ Jadikan Executable
+> chmod +x create-bucket.sh
+
+5️⃣ Cara Pakai
+Bucket private (default)
+> ./create-bucket.sh pdn-bucket
+
+Bucket public
+./create-bucket.sh user-uploads public
+
+6️⃣ Verifikasi
+mc version info minio/pdn-bucket
+mc ilm ls minio/pdn-bucket
+mc anonymous get minio/pdn-bucket
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
