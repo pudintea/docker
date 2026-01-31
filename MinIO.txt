@@ -1,0 +1,210 @@
+Docker Compose – MinIO (Single Node)
+> nano docker-compose.yml
+
+version: "3.9"
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web Console
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    volumes:
+      - ./minio/data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - minio-net
+
+networks:
+  minio-net:
+    driver: bridge
+
+
+
+Jalankan MinIO
+> docker compose up -d
+
+Cek:
+> docker ps
+
+Akses MinIO Console
+Buka browser:
+http://localhost:9001
+
+
+Login:
+User: minioadmin
+Pass: minioadmin123
+
+Buat Bucket
+Menu Buckets
+Create Bucket
+Nama: pdn-bucket
+
+
+Akses Seperti AWS S3
+MinIO 100% kompatibel AWS SDK.
+
+Contoh .env AWS
+-----------------
+export AWS_ACCESS_KEY_ID=admin
+export AWS_SECRET_ACCESS_KEY=passwordkuat
+export AWS_ENDPOINT_URL=http://127.0.0.1:9000
+
+Contoh (Node.js)
+-----------------
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+
+const s3 = new S3Client({
+  endpoint: "http://127.0.0.1:9000",
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: "admin",
+    secretAccessKey: "passwordkuat"
+  },
+  forcePathStyle: true
+});
+
+await s3.send(new PutObjectCommand({
+  Bucket: "my-bucket",
+  Key: "hello.txt",
+  Body: "Hello MinIO!"
+}));
+
+
+Public Access (Optional)
+Bucket Policy → Public Read
+
+Via Console:
+Bucket → Access Policy
+
+Pilih Public
+Atau via CLI:
+mc anonymous set public localminio/my-bucket
+
+Akses:
+http://IP_SERVER:9000/my-bucket/hello.txt
+
+
+INTEGRASI DENGAN CODEIGNITER 4
+==============================
+Install AWS SDK for PHP
+
+Masuk ke folder CI4:
+> composer require aws/aws-sdk-php
+
+Konfigurasi .env CodeIgniter 4
+------------------------------
+Edit file .env:
+
+MINIO_ENDPOINT=http://localhost:9000
+MINIO_KEY=minioadmin
+MINIO_SECRET=minioadmin123
+MINIO_BUCKET=ci4-bucket
+MINIO_REGION=us-east-1
+
+
+Pastikan .env aktif:
+CI_ENVIRONMENT=development
+
+Buat Service MinIO
+> app/Services/MinioService.php
+<?php
+namespace App\Services;
+use Aws\S3\S3Client;
+class MinioService
+{
+    public function client(): S3Client
+    {
+        return new S3Client([
+            'version'  => 'latest',
+            'region'   => getenv('MINIO_REGION'),
+            'endpoint' => getenv('MINIO_ENDPOINT'),
+            'use_path_style_endpoint' => true,
+            'credentials' => [
+                'key'    => getenv('MINIO_KEY'),
+                'secret' => getenv('MINIO_SECRET'),
+            ],
+        ]);
+    }
+}
+
+Daftarkan Service (opsional tapi rapi)
+---------------------------------------
+> app/Config/Services.php
+public static function minio(bool $getShared = true)
+{
+    if ($getShared) {
+        return static::getSharedInstance('minio');
+    }
+
+    return new \App\Services\MinioService();
+}
+
+Upload File dari Controller
+----------------------------
+> nano app/Controllers/Upload.php
+<?php
+namespace App\Controllers;
+class Upload extends BaseController
+{
+    public function index()
+    {
+        return view('upload_form');
+    }
+
+    public function store()
+    {
+        $file = $this->request->getFile('file');
+
+        if (! $file->isValid()) {
+            return 'File tidak valid';
+        }
+
+        $minio = service('minio')->client();
+
+        $minio->putObject([
+            'Bucket' => getenv('MINIO_BUCKET'),
+            'Key'    => 'uploads/' . $file->getRandomName(),
+            'Body'   => fopen($file->getTempName(), 'r'),
+            'ContentType' => $file->getClientMimeType(),
+        ]);
+
+        return 'Upload ke MinIO berhasil!';
+    }
+}
+
+Form Upload
+-------------
+> nano app/Views/upload_form.php
+<form method="post" enctype="multipart/form-data" action="/upload">
+  <input type="file" name="file" required>
+  <button type="submit">Upload</button>
+</form>
+
+Routing
+--------
+> nano app/Config/Routes.php
+$routes->get('upload', 'Upload::index');
+$routes->post('upload', 'Upload::store');
+
+D. TEST END-TO-END
+
+Jalankan CI4:
+php spark serve
+Buka:
+http://localhost:8080/upload
+
+Upload file
+Cek di MinIO Console → Bucket → uploads/
+SUCCESS! CI4 → MinIO via Docker
+
+
+
+
+// PUDIN SAEPUDIN
