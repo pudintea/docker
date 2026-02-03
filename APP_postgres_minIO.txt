@@ -1,0 +1,190 @@
+Disini saya mencoba melakukan konfigurasi menggunakan 3 docker-compose dalam satu server
+
+
+
+STEP 1, Buat network (sekali saja)
+==================================
+Kita bikin 1 network, lalu semua compose join ke situ.
+> docker network create backend-net
+
+Lihat 
+> docker network ls
+
+
+STEP 2, Buat Docker Compose Postgre
+===================================
+Kita buat Database Postgres kita,
+> mkdir postgress16
+> cd postgress16
+> nano docker-compose.yaml
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    networks:
+      - backend-net
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  backend-net:
+    external: true
+
+
+=======================
+Aktifkan
+> docker compose up -d
+> docker compose down    #mematikan
+
+Cek
+> docker compose ps
+
+cek LOG
+> docker compose logs -f postgres
+
+Stop Docker Running
+> docker stop postgres
+
+Hapus container
+> docker rm postgres
+
+Volume bekas docker-compose
+Cek dulu:
+> docker volume ls
+
+Kalau mau hapus semua volume yang tidak dipakai container:
+> docker volume prune
+
+Buat TABLE
+------------
+-- PostgreSQL DDL
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS documents (
+  id           UUID        PRIMARY KEY DEFAULT uuid_generate_v4(),
+  filename     TEXT        NOT NULL,
+  storage_path TEXT        NOT NULL UNIQUE,
+  size         BIGINT      NOT NULL CHECK (size >= 0),
+  content_type TEXT        NOT NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Index (optional)
+CREATE INDEX IF NOT EXISTS idx_documents_filename ON documents (filename);
+CREATE INDEX IF NOT EXISTS idx_documents_content_type ON documents (content_type);
+CREATE INDEX IF NOT EXISTS idx_documents_created_at ON documents (created_at);
+
+
+
+
+
+STEP 3 , MinIO
+================
+> nano docker-compose.yaml
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-01-16T16-07-38Z
+    container_name: minio
+    restart: unless-stopped
+    networks:
+      - backend-net
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  minio_data:
+
+networks:
+  backend-net:
+    external: true
+
+Aktifkan
+> docker compose up -d
+
+
+
+
+
+STEP 3, JALANKAN APP
+======================
+
+> git clone https://github.com/ajidiyantoro/docapi.git
+> cd docapi
+> docker build -t docapi .
+> nano docker-compose.yaml
+services:
+  app:
+    image: docapi:latest
+    container_name: docapi-app
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true
+
+
+Buat ENV
+> nano .env
+PORT=8080
+
+# Database (PostgreSQL)
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=app_user
+DB_PASSWORD=app_password
+DB_NAME=app_db
+DB_SSLMODE=disable
+DB_MAX_OPEN_CONNS=10
+DB_MAX_IDLE_CONNS=5
+DB_CONN_MAX_LIFETIME_SEC=300
+
+# MinIO
+MINIO_ENDPOINT=minio:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin123
+MINIO_BUCKET=docapi
+MINIO_USE_SSL=false
+
+
+
+Aktifkan
+> docker compose up -d
+
+
+
+
+======== PUDIN SAEPUDIN, italazhar.com
