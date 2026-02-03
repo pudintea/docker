@@ -53,6 +53,9 @@ Aktifkan
 > docker compose down
 
 Cek
-docker compose ps
+> docker compose ps
+
+cek LOG
+> docker compose logs -f minio  # silahkan sesuaikan
 
 // PUDIN SAEPUDIN, italazhar.com
