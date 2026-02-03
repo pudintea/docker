@@ -38,7 +38,7 @@ services:
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:9000/minio/health/live || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -47,7 +47,12 @@ volumes:
   postgres_data:
   minio_data:
 
-// PUDIN SAEPUDIN, italazhar.com
-================
+=======================
+Aktifkan
+> docker compose up -d
+> docker compose down
+
 Cek
-docker-compose up -d
+docker compose ps
+
+// PUDIN SAEPUDIN, italazhar.com
