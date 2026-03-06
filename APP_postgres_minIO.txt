@@ -186,5 +186,95 @@ Aktifkan
 
 
 
+PG ADMIn dan Postgress
+=======================
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    networks:
+      - backend-net
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+      POSTGRES_DB: app_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: "no"
+    networks:
+      - backend-net
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: supersecurepassword
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  backend-net:
+    external: true
+
+Mengaktifkan
+===============
+
+Jalankan PostgreSQL saja (normal mode)
+> docker compose up -d postgres
+
+Jika ingin remote database → nyalakan pgAdmin
+> docker compose up -d pgadmin
+
+pgAdmin akan tersedia di:
+http://SERVER_IP:5050
+
+Login:
+email    : admin@example.com
+password : supersecurepassword
+
+Tambahkan server PostgreSQL di pgAdmin
+Di pgAdmin:
+Add New Server
+General
+Name: Local PostgreSQL
+
+Connection
+Host : postgres
+Port : 5432
+User : app_user
+Pass : app_password
+DB   : app_db
+
+Penting:
+Host = postgres
+karena mereka 1 docker network.
+
+5. Matikan lagi pgAdmin jika sudah selesai
+> docker compose stop pgadmin
+atau
+
+> docker compose down pgadmin
+
+
+PostgreSQL tetap berjalan.
+
 
 ======== PUDIN SAEPUDIN, italazhar.com
