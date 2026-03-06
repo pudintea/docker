@@ -282,9 +282,9 @@ PG ADMIN SAJA
 > nano docker-compose.yaml
 services:
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:6.18
     container_name: pgadmin
-    restart: "no"
+    restart: unless-stopped
     ports:
       - "5050:80"
     environment:
