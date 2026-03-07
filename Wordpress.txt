@@ -138,6 +138,18 @@ Jalankan:
 > docker compose down -v
 
 
+Lalu di wp-config.php ubah menjadi:
+===================================
+define('ADVMO_MINIO_KEY', getenv('ADVMO_MINIO_KEY'));
+define('ADVMO_MINIO_SECRET', getenv('ADVMO_MINIO_SECRET'));
+define('ADVMO_MINIO_BUCKET', getenv('ADVMO_MINIO_BUCKET'));
+define('ADVMO_MINIO_DOMAIN', getenv('ADVMO_MINIO_DOMAIN'));
+define('ADVMO_MINIO_ENDPOINT', getenv('ADVMO_MINIO_ENDPOINT'));
+define('ADVMO_MINIO_PATH_STYLE_ENDPOINT', getenv('ADVMO_MINIO_PATH_STYLE_ENDPOINT'));
+define('ADVMO_MINIO_REGION', getenv('ADVMO_MINIO_REGION'));
+
+
+
 PHPMYADMIN
 ---------------------------------
 > cd ../phpmyadmin
