@@ -18,7 +18,7 @@ wordpress/
 
 Network
 =======
-> docker network create wordpress-net
+Sebelumnya kita sudah buat Network "backend-net", untuk ke minIO
 
 > mkdir -p wordpress/web
 > mkdir -p wordpress/web/html
@@ -59,7 +59,7 @@ services:
     volumes:
       - wordpress_db_data:/var/lib/mysql
     networks:
-      - wordpress-net
+      - backend-net
 
   wordpress:
     image: wordpress:php8.2-fpm
@@ -81,7 +81,7 @@ services:
       PHP_UPLOAD_MAX_FILESIZE: 64M
       PHP_POST_MAX_SIZE: 64M
     networks:
-      - wordpress-net
+      - backend-net
     depends_on:
       - wordpress_db
 
@@ -96,12 +96,12 @@ services:
     depends_on:
       - wordpress
     networks:
-      - wordpress-net
+      - backend-net
 
 volumes:
   wordpress_db_data:
 networks:
-  wordpress-net:
+  backend-net:
     external: true
 
 
@@ -153,9 +153,9 @@ services:
     ports:
       - "8082:80"
     networks:
-      - wordpress-net
+      - backend-net
 networks:
-  wordpress-net:
+  backend-net:
     external: true
 
 
