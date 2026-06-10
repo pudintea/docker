@@ -8,6 +8,18 @@ Struktur Folder
 └── config/
     └── mariadb.cnf
 ```
+Jika ingin network dipakai oleh banyak project Docker Compose
+
+Buat network sekali saja:
+```
+docker network create db-network
+```
+Lalu ubah bagian network menjadi:
+```
+networks:
+  db-network:
+    external: true
+```
 Kode di docker-compose.yml
 ```
 services:
