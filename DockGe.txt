@@ -1,0 +1,63 @@
+# DockGe
+Dockge adalah aplikasi berbasis web untuk mengelola Docker Compose melalui antarmuka grafis (GUI).
+Doc : https://github.com/sekolah-alazhar/my-auth-go
+
+## Cara instalasi DockGe
+Dockge bisa dijalankan di server Linux yang sudah memiliki Docker 20+ atau Podman.
+Harusnya install docker dulu ya, sudah saya tambahkan caranya dibawah.
+Instalasi standar berdasarkan dokumentasi resminya:
+### Membuat direktori
+> mkdir -p /opt/stacks /opt/dockge
+
+### Masuk ke direktori Dockge
+> cd /opt/dockge
+
+### Download konfigurasi
+> curl https://raw.githubusercontent.com/louislam/dockge/master/compose.yaml --output compose.yaml
+
+### Jalankan Dockge
+> docker compose up -d
+
+Kemudian akses:
+Port : 5001
+http://IP-SERVER:5001
+
+
+===========================================================================
+
+
+## Cara Instalasi Docker
+# Add Docker's official GPG key:
+> sudo apt update
+> sudo apt install ca-certificates curl
+> sudo install -m 0755 -d /etc/apt/keyrings
+> sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+> sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+
+> sudo apt update
+> sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+> sudo groupadd docker || true && sudo usermod -aG docker $USER
+
+> sudo systemctl enable --now docker
+
+STATUS DAN START
+> sudo systemctl status docker
+> sudo systemctl start docker
+
+CEK
+> docker version
+> docker compose version
+
+
+
+## Pudin Saepudin
